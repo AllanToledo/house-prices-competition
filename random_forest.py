@@ -22,7 +22,7 @@ sns.heatmap(corr,
     cmap=sns.diverging_palette(220, 10, as_cmap=True),
     vmin=-1.0, vmax=1.0,
     square=True, ax=ax)
-f.savefig('corr.png')
+f.savefig('./random_forest/corr.png')
 
 sale_price_pos = all_features.index('SalePrice')
 features_with_high_corr = [all_features[i] for i in range(len(all_features)) if abs(corr.iloc[i, sale_price_pos]) > 0.5 and i != sale_price_pos]
@@ -61,7 +61,7 @@ sns.heatmap(result_df,
     cmap=sns.color_palette("rocket_r", as_cmap=True),
     # vmin=-1, vmax=1,
     square=True, ax=ax)
-f.savefig("estimators_x_depth.png")
+f.savefig("./random_forest/estimators_x_depth.png")
 
 rf_model = RandomForestRegressor(n_estimators=300, max_depth=10, random_state=1)
 rf_model.fit(train_X, train_y)

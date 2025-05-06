@@ -7,9 +7,9 @@ Este trabalho tem como objetivo desenvolver três abordagens de aprendizado de m
 https://www.kaggle.com/competitions/home-data-for-ml-course
 
 #### Técnicas utilizadas
-##### Random Forest
-##### Linear Regression
-##### Neural Network
+- Random Forest
+- Linear Regression
+- Neural Network
 #### Instalação e execução
 As aplicações de Aprendizado de Máquina foram desenvolvidas utilizando Python 3. Para aplicação, recomenda-se o uso de _Virtual Enviroments_ (venv). Este guia é uma ótima introdução ao uso de _Virtual Enviroments_.
 
