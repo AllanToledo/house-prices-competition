@@ -11,7 +11,7 @@ https://www.kaggle.com/competitions/home-data-for-ml-course
 - Linear Regression
 - Neural Network
 #### Instalação e execução
-As aplicações de Aprendizado de Máquina foram desenvolvidas utilizando Python 3. Para aplicação, recomenda-se o uso de _Virtual Enviroments_ (venv). Este guia é uma ótima introdução ao uso de _Virtual Enviroments_.
+As aplicações de Aprendizado de Máquina foram desenvolvidas utilizando Python 3.11 (PyTorch requer Python >=3.9 e <=3.11). Para aplicação, recomenda-se o uso de _Virtual Enviroments_ (venv). Este guia é uma ótima introdução ao uso de _Virtual Enviroments_.
 
 https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/#create-and-use-virtual-environments
 
