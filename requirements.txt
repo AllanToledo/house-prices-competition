@@ -2,7 +2,7 @@ numpy<2
 pandas
 matplotlib
 seaborn
-scikit-learn
+scikit-lear
 torch 
 torchvision
 torchaudio

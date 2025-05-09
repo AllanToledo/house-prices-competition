@@ -24,6 +24,7 @@ sns.heatmap(corr,
     square=True, ax=ax)
 f.savefig('./random_forest/corr.png')
 
+
 sale_price_pos = all_features.index('SalePrice')
 features_with_high_corr = [all_features[i] for i in range(len(all_features)) if abs(corr.iloc[i, sale_price_pos]) > 0.5 and i != sale_price_pos]
 print(features_with_high_corr)
@@ -33,6 +34,13 @@ X = all_train_dummies[features_with_high_corr]
 submission_data_preprocessed = pd.get_dummies(submission_data.fillna(0))[features_with_high_corr]
 train_X, val_X, train_y, val_y = train_test_split(X, y,random_state = 0)
 
+print(all_train_data.shape)
+print(all_train_dummies.shape)
+print(X.shape)
+print(train_X.shape)
+print(val_X.shape)
+##exit()
+
 from itertools import product
 n_estimators_options = list(range(150, 351, 50))
 max_depth_options = list(range(4, 13, 2))
@@ -40,7 +48,7 @@ min_samples_split_options = list(range(2, 12, 2))
 min_samples_leaf_options = list(range(1, 6, 1))
 criterion_options = ["squared_error", "absolute_error", "friedman_mse", "poisson"]
 
-permutations = list(product(
+combinations = list(product(
     n_estimators_options, 
     max_depth_options, 
     min_samples_split_options,
@@ -48,21 +56,26 @@ permutations = list(product(
     criterion_options
 ))
 
-total_permutations = len(permutations)
-print(f"total permutations: {total_permutations}")
+from random import shuffle
+shuffle(combinations)
+
+total_combinations = len(combinations)
+print(f"total combinations: {total_combinations}")
 
 best_options = dict(n_estimators=300, max_depth=6)
+best_options = dict(n_estimators=350, max_depth=10)
 best_distance = 1e99
+
+fig, ax = plt.subplots()
+
 for i, (
     n_estimators, 
     max_depth, 
     min_samples_split,
     min_samples_leaf,
     criterion
-    ) in enumerate(permutations):
+    ) in enumerate(combinations):
 
-    # não precisamos mais fazer a busca exaustiva, achamos uma configuração boa
-    break
     options = dict(
         n_estimators=n_estimators, 
         max_depth=max_depth,
@@ -71,7 +84,7 @@ for i, (
         criterion=criterion
     )
 
-    model = RandomForestRegressor(**options, random_state=1)
+    model = RandomForestRegressor(**options, random_state=1, n_jobs=-1)
     model.fit(train_X, train_y)
     train_predictions = model.predict(train_X)
     val_predictions = model.predict(val_X)
@@ -89,13 +102,28 @@ for i, (
     # so we will take de options that better aproximate the model to 'b'
 
     # distance from a to b
+
+    x, y = (train_r2 - val_r2), (val_r2)
+    ax.scatter(x, y, c="tab:blue", edgecolors='none')
+
     distance = ((train_r2 - val_r2) ** 2 + (val_r2 - 1) ** 2) ** (1/2)
     if distance < best_distance:
         best_distance = distance
         best_options = options
 
-    print(f"|{i + 1: >5d}º of {total_permutations}|: {options} {train_r2:.3f} {val_r2:.3f} {train_mae:.1f} {val_mae:.1f}")
+    print(f"|{i + 1: >5d}º of {total_combinations}|: {options} {train_r2:.3f} {val_r2:.3f} {train_mae:.1f} {val_mae:.1f}")
 
+plt.rcParams['text.usetex'] = True
+ax.scatter(0, 1, c="tab:red", edgecolors='none')
+ax.set_ylabel(r"$R2_v$")
+ax.set_xlabel(r"$|R2_t - R2_v|$")
+ax.set_ybound(0.6, 1.01)
+ax.set_xbound(-.01, 0.2)
+ax.legend()
+ax.grid(True)
+
+fig.set_size_inches(5, 5)
+fig.savefig('./random_forest/hiperparametros.png')
 print(best_options)
 
 best_model = RandomForestRegressor(**best_options, random_state=1)
